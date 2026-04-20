@@ -1,0 +1,20 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "app_logic.c"
+        "ble_manager.c"
+        "wearable_gatt.c"
+        "i2c_manager.c"
+        "max30102.c"
+        "max30205.c"
+        "bme280.c"
+    INCLUDE_DIRS
+        "."
+    REQUIRES
+        freertos
+        esp_timer
+        bt
+        nvs_flash
+        esp_driver_i2c
+        esp_driver_gpio
+)

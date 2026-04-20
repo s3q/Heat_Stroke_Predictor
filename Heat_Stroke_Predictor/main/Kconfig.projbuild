@@ -1,0 +1,159 @@
+menu "Health Sensor Application Configuration"
+
+    config APP_I2C_SDA_GPIO
+        int "I2C SDA GPIO"
+        range 0 21
+        default 8
+        help
+            I2C SDA pin used by MAX30205, MAX30102, and BME280.
+
+    config APP_I2C_SCL_GPIO
+        int "I2C SCL GPIO"
+        range 0 21
+        default 9
+        help
+            I2C SCL pin used by MAX30205, MAX30102, and BME280.
+
+    config APP_I2C_FREQ_HZ
+        int "I2C bus clock (Hz)"
+        range 10000 1000000
+        default 400000
+        help
+            Shared I2C clock. 400 kHz is typical for this sensor set.
+
+    config APP_SENSOR_TASK_PERIOD_MS
+        int "Sensor task period (ms)"
+        range 200 60000
+        default 1000
+        help
+            Periodic read interval for the unified sensor task.
+
+    config APP_SENSOR_INIT_RETRY_MS
+        int "Retry interval for failed sensor init (ms)"
+        range 1000 60000
+        default 5000
+        help
+            Delay before retrying initialization after a sensor error/disconnect.
+
+    config APP_SENSOR_TASK_STACK_SIZE
+        int "Sensor task stack size (bytes)"
+        range 3072 16384
+        default 6144
+
+    config APP_SENSOR_TASK_PRIORITY
+        int "Sensor task priority"
+        range 1 24
+        default 5
+
+    config APP_RISK_DEBOUNCE_CYCLES
+        int "Risk category debounce cycles"
+        range 1 10
+        default 3
+        help
+            Number of consecutive sensor cycles required before applying a new
+            risk category to outputs (buzzer/LED) to avoid flicker.
+
+    config APP_BUZZER_GPIO
+        int "Buzzer GPIO (-1 to disable)"
+        range -1 21
+        default -1
+        help
+            GPIO connected to active buzzer. Set to -1 to disable buzzer output.
+
+    config APP_STATUS_LED_GPIO
+        int "Status LED GPIO (-1 to disable)"
+        range -1 21
+        default -1
+        help
+            GPIO connected to status LED. Set to -1 to disable LED output.
+
+    config APP_MAX30205_ADDR
+        hex "MAX30205 I2C address"
+        range 0x08 0x77
+        default 0x48
+
+    config APP_MAX30102_ADDR
+        hex "MAX30102 I2C address"
+        range 0x08 0x77
+        default 0x57
+
+    config APP_BME280_ADDR
+        hex "BME280 I2C address"
+        range 0x08 0x77
+        default 0x76
+
+    config APP_MAX30102_SAMPLE_RATE_HZ
+        int "MAX30102 sample rate (Hz)"
+        range 50 3200
+        default 100
+        help
+            Valid hardware rates are 50, 100, 200, 400, 800, 1000, 1600, and 3200.
+            Non-matching values are rounded to the nearest valid setting.
+
+    config APP_MAX30102_LED_RED_PA
+        hex "MAX30102 RED LED pulse amplitude"
+        range 0x00 0xFF
+        default 0x24
+        help
+            Tune for your optics and power budget.
+
+    config APP_MAX30102_LED_IR_PA
+        hex "MAX30102 IR LED pulse amplitude"
+        range 0x00 0xFF
+        default 0x24
+
+    config APP_MAX30102_LED_PILOT_PA
+        hex "MAX30102 Pilot LED pulse amplitude"
+        range 0x00 0xFF
+        default 0x7F
+
+    config APP_BME280_USE_FORCED_MODE
+        bool "Use BME280 forced mode"
+        default n
+        help
+            If enabled, each read triggers one conversion. If disabled, normal mode is used.
+
+    config APP_BME280_TEMP_OS
+        int "BME280 temperature oversampling (0..5)"
+        range 0 5
+        default 2
+
+    config APP_BME280_PRESS_OS
+        int "BME280 pressure oversampling (0..5)"
+        range 0 5
+        default 5
+
+    config APP_BME280_HUM_OS
+        int "BME280 humidity oversampling (0..5)"
+        range 0 5
+        default 1
+
+    config APP_BME280_FILTER_COEFF
+        int "BME280 filter coefficient"
+        range 0 16
+        default 4
+        help
+            Valid hardware values are 0, 2, 4, 8, and 16.
+
+    config APP_BLE_ENABLE
+        bool "Enable BLE telemetry service"
+        default y
+        help
+            Enables NimBLE peripheral with custom wearable telemetry GATT service.
+
+    config APP_BLE_DEVICE_NAME
+        string "BLE device name"
+        default "HeatStrokeWearable"
+        depends on APP_BLE_ENABLE
+        help
+            Name shown while scanning from phone apps.
+
+    config APP_BLE_NOTIFY_INTERVAL_MS
+        int "BLE notify interval (ms)"
+        range 200 10000
+        default 1000
+        depends on APP_BLE_ENABLE
+        help
+            Notification cadence for live/risk packets.
+
+endmenu
